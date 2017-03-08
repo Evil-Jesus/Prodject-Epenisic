@@ -20,14 +20,12 @@ namespace TileEditor
 
             float hLineLength = hCount * tileSize.x;
             float vLineLength = vCount * tileSize.y;
-            for (var y = 0; y <= vCount; ++y)
-            {
+            for (var y = 0; y <= vCount; ++y) {
                 Vector3 p1 = new Vector3(0, y * tileSize.y) + origin;
                 Vector3 p2 = new Vector3(hLineLength, y * tileSize.y) + origin;
                 Handles.DrawLine(p1, p2);
             }
-            for (var x = 0; x <= hCount; ++x)
-            {
+            for (var x = 0; x <= hCount; ++x) {
                 Vector3 p1 = new Vector3(x * tileSize.x, 0) + origin;
                 Vector3 p2 = new Vector3(x * tileSize.x, vLineLength) + origin;
                 Handles.DrawLine(p1, p2);
@@ -36,8 +34,7 @@ namespace TileEditor
 
         public static Vector2 GetMousePosInWorld(Vector2 mousePosition)
         {
-            if (Camera.current == null)
-            {
+            if (Camera.current == null) {
                 return Vector2.zero;
             }
             return Camera.current.ScreenToWorldPoint(new Vector2(mousePosition.x, Camera.current.pixelHeight - mousePosition.y));
@@ -45,29 +42,22 @@ namespace TileEditor
 
         public static GameObject CreateTile(Vector3 position, TileData tileData, float alpha, string sortingLayerName)
         {
-            if (tileData == null || tileData.Sprite == null)
-            {
+            if (tileData == null || tileData.Sprite == null) {
                 return null;
             }
             GameObject go = new GameObject();
             go.transform.position = position;
 
             Vector3 localScale = go.transform.localScale;
-            if (tileData.FlipHorizontally)
-            {
+            if (tileData.FlipHorizontally) {
                 localScale.x = -1;
-            }
-            else
-            {
+            } else {
                 localScale.x = 1;
             }
 
-            if (tileData.FlipVertically)
-            {
+            if (tileData.FlipVertically) {
                 localScale.y = -1;
-            }
-            else
-            {
+            } else {
                 localScale.y = 1;
             }
             go.transform.localScale = localScale;
@@ -77,6 +67,11 @@ namespace TileEditor
             renderer.sortingOrder = tileData.OrderInLayer;
             Color color = renderer.color;
             renderer.color = new Color(color.r, color.g, color.b, alpha);
+
+            int x = Mathf.RoundToInt(position.x - 0.5f);
+            int y = Mathf.RoundToInt(position.y - 0.5f);
+            World.navGrid.SetAt(x, y, tileData.moveCost);
+
             return go;
         }
 
@@ -85,39 +80,31 @@ namespace TileEditor
 
         public static bool IsTileColliderEqualsToColliderInfo(Tile tile, ColliderInfo colliderInfo)
         {
-            if (tile == null || colliderInfo == null)
-            {
+            if (tile == null || colliderInfo == null) {
                 return false;
             }
-            switch (colliderInfo.CollisionType)
-            {
-                case CollisionType.Box:
-                    {
+            switch (colliderInfo.CollisionType) {
+                case CollisionType.Box: {
                         BoxCollider2D collider = tile.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
                         BoxCollider2DInfo info = colliderInfo as BoxCollider2DInfo;
-                        if (collider == null || info == null)
-                        {
+                        if (collider == null || info == null) {
                             return false;
                         }
 #if UNITY_5_0
                         if (info.Center == collider.offset && info.Size == collider.size)
 #else
-                         if (info.Center == collider.offset && info.Size == collider.size)
+                        if (info.Center == collider.offset && info.Size == collider.size)
 #endif
                         {
                             return true;
-                        }
-                        else
-                        {
+                        } else {
                             return false;
                         }
                     }
-                case CollisionType.Circle:
-                    {
+                case CollisionType.Circle: {
                         CircleCollider2D collider = tile.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
                         CircleCollider2DInfo info = colliderInfo as CircleCollider2DInfo;
-                        if (collider == null || info == null)
-                        {
+                        if (collider == null || info == null) {
                             return false;
                         }
 #if UNITY_5_0
@@ -128,34 +115,25 @@ namespace TileEditor
 #endif
                         {
                             return true;
-                        }
-                        else
-                        {
+                        } else {
                             return false;
                         }
                     }
-                case CollisionType.Polygon:
-                    {
+                case CollisionType.Polygon: {
                         PolygonCollider2D collider = tile.GetComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                         PolygonCollider2DInfo info = colliderInfo as PolygonCollider2DInfo;
-                        if (collider == null || info == null)
-                        {
+                        if (collider == null || info == null) {
                             return false;
                         }
 
-                        if (collider.pathCount == info.PathCount)
-                        {
-                            for (int i = 0; i < collider.pathCount; ++i)
-                            {
-                                if (collider.points[i] != info.Points[i])
-                                {
+                        if (collider.pathCount == info.PathCount) {
+                            for (int i = 0; i < collider.pathCount; ++i) {
+                                if (collider.points[i] != info.Points[i]) {
                                     return false;
                                 }
                             }
                             return true;
-                        }
-                        else
-                        {
+                        } else {
                             return false;
                         }
                     }
@@ -166,49 +144,41 @@ namespace TileEditor
 
         public static ColliderInfo GetColliderInfoFromTile(Tile tile)
         {
-            if (tile == null)
-            {
+            if (tile == null) {
                 return null;
             }
 
             ColliderInfo info = null;
             CollisionType collisionType = tile.Collision;
 
-            switch (collisionType)
-            {
-                case CollisionType.Box:
-                    {
+            switch (collisionType) {
+                case CollisionType.Box: {
                         BoxCollider2D collider = tile.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
-                        if (collider)
-                        {
+                        if (collider) {
 #if UNITY_5_0
                             info = new BoxCollider2DInfo(collider.offset, collider.size);
 #else
-                              info = new BoxCollider2DInfo(collider.offset, collider.size);
+                            info = new BoxCollider2DInfo(collider.offset, collider.size);
 #endif
 
                         }
                         break;
                     }
-                case CollisionType.Circle:
-                    {
+                case CollisionType.Circle: {
                         CircleCollider2D collider = tile.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
-                        if (collider)
-                        {
+                        if (collider) {
 #if UNITY_5_0
                             info = new CircleCollider2DInfo(collider.offset, collider.radius);
 #else
-                              info = new CircleCollider2DInfo(collider.offset, collider.radius);
+                            info = new CircleCollider2DInfo(collider.offset, collider.radius);
 #endif
 
                         }
                         break;
                     }
-                case CollisionType.Polygon:
-                    {
+                case CollisionType.Polygon: {
                         PolygonCollider2D collider = tile.GetComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
-                        if (collider)
-                        {
+                        if (collider) {
                             info = new PolygonCollider2DInfo(collider.pathCount, collider.points);
                         }
                         break;
@@ -222,39 +192,33 @@ namespace TileEditor
 
         public static void ApplyColliderInfoToTile(Tile tile, ColliderInfo colliderInfo)
         {
-            if (tile == null || colliderInfo == null)
-            {
+            if (tile == null || colliderInfo == null) {
                 return;
             }
 
             CollisionType collisionType = colliderInfo.CollisionType;
 
-            switch (collisionType)
-            {
-                case CollisionType.Box:
-                    {
+            switch (collisionType) {
+                case CollisionType.Box: {
                         BoxCollider2DInfo info = colliderInfo as BoxCollider2DInfo;
                         BoxCollider2D collider = tile.GetComponent(typeof(BoxCollider2D)) as BoxCollider2D;
-                        if (info != null && collider != null)
-                        {
+                        if (info != null && collider != null) {
                             collider.size = info.Size;
 
 #if UNITY_5_0
                             collider.offset = info.Center;
 #else
-                             collider.offset = info.Center;
+                            collider.offset = info.Center;
 #endif
 
                         }
                         break;
                     }
 
-                case CollisionType.Circle:
-                    {
+                case CollisionType.Circle: {
                         CircleCollider2DInfo info = colliderInfo as CircleCollider2DInfo;
                         CircleCollider2D collider = tile.GetComponent(typeof(CircleCollider2D)) as CircleCollider2D;
-                        if (info != null && collider != null)
-                        {
+                        if (info != null && collider != null) {
 #if UNITY_5_0
                             collider.offset = info.Center;
 #else
@@ -266,12 +230,10 @@ namespace TileEditor
                         break;
                     }
 
-                case CollisionType.Polygon:
-                    {
+                case CollisionType.Polygon: {
                         PolygonCollider2DInfo info = colliderInfo as PolygonCollider2DInfo;
                         PolygonCollider2D collider = tile.GetComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
-                        if (info != null && collider != null)
-                        {
+                        if (info != null && collider != null) {
                             collider.pathCount = info.PathCount;
                             collider.points = info.Points;
                         }
@@ -291,46 +253,37 @@ namespace TileEditor
             Vector3 localScale = tile.transform.localScale;
             SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
 
-            if (tile.tag != tileData.Tag)
-            {
+            if (tile.tag != tileData.Tag) {
                 return false;
             }
 
-            if (renderer.sortingOrder != tileData.OrderInLayer)
-            {
+            if (renderer.sortingOrder != tileData.OrderInLayer) {
                 return false;
             }
 
-            if ((tileData.FlipHorizontally && localScale.x != -1) || (!tileData.FlipHorizontally && localScale.x != 1))
-            {
+            if ((tileData.FlipHorizontally && localScale.x != -1) || (!tileData.FlipHorizontally && localScale.x != 1)) {
                 return false;
             }
 
-            if ((tileData.FlipVertically && localScale.y != -1) || (!tileData.FlipVertically && localScale.y != 1))
-            {
+            if ((tileData.FlipVertically && localScale.y != -1) || (!tileData.FlipVertically && localScale.y != 1)) {
                 return false;
             }
 
-            if (renderer.sprite != tileData.Sprite)
-            {
+            if (renderer.sprite != tileData.Sprite) {
                 return false;
             }
 
-            if (tile.Collision != tileData.Collision)
-            {
+            if (tile.Collision != tileData.Collision) {
                 return false;
             }
 
-            if (Mathf.Abs(tile.transform.eulerAngles.z - tileData.Rotation) > 0.0001f)
-            {
+            if (Mathf.Abs(tile.transform.eulerAngles.z - tileData.Rotation) > 0.0001f) {
                 return false;
             }
 
             Collider2D collider = tile.GetComponent<Collider2D>();
-            if (collider != null)
-            {
-                if (collider.isTrigger != tileData.IsTrigger || collider.sharedMaterial != tileData.PhysicsMaterial)
-                {
+            if (collider != null) {
+                if (collider.isTrigger != tileData.IsTrigger || collider.sharedMaterial != tileData.PhysicsMaterial) {
                     return false;
                 }
             }
@@ -351,10 +304,8 @@ namespace TileEditor
         public static int GetSortingLayerID(string sortingLayer)
         {
             string[] sortingLayerNames = TileEditorUtility.GetSortingLayerNames();
-            for (int i = 0; i < sortingLayerNames.Length; ++i)
-            {
-                if (sortingLayerNames[i] == sortingLayer)
-                {
+            for (int i = 0; i < sortingLayerNames.Length; ++i) {
+                if (sortingLayerNames[i] == sortingLayer) {
                     return i;
                 }
             }
@@ -377,11 +328,9 @@ namespace TileEditor
         {
             List<string> layers = new List<string>();
 
-            for (int i = 0; i < 32; ++i)
-            {
+            for (int i = 0; i < 32; ++i) {
                 string name = LayerMask.LayerToName(i);
-                if (name != null && name.Length > 0)
-                {
+                if (name != null && name.Length > 0) {
                     layers.Add(name);
                 }
             }
@@ -391,20 +340,16 @@ namespace TileEditor
         public static List<Sprite> GetSpritesFromTexture(Texture2D texture)
         {
 
-            if (texture == null)
-            {
+            if (texture == null) {
                 return null;
             }
             List<Sprite> retValue = null;
             string path = AssetDatabase.GetAssetPath(texture);
             UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(path);
-            if (assets != null)
-            {
+            if (assets != null) {
                 retValue = new List<Sprite>();
-                foreach (UnityEngine.Object asset in assets)
-                {
-                    if (asset is Sprite)
-                    {
+                foreach (UnityEngine.Object asset in assets) {
+                    if (asset is Sprite) {
                         retValue.Add(asset as Sprite);
                     }
                 }
@@ -416,8 +361,7 @@ namespace TileEditor
 
         public static TileData GetTileDataFromTile(Tile tile)
         {
-            if (tile == null)
-            {
+            if (tile == null) {
                 return null;
             }
             TileData tileData = new TileData();
@@ -431,8 +375,7 @@ namespace TileEditor
             tileData.Rotation = tile.transform.rotation.eulerAngles.z;
             tileData.Collision = tile.Collision;
             tileData.Tag = tile.tag;
-            if (collider != null)
-            {
+            if (collider != null) {
                 tileData.IsTrigger = collider.isTrigger;
                 tileData.PhysicsMaterial = collider.sharedMaterial;
             }
