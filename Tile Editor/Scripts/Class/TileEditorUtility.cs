@@ -68,9 +68,10 @@ namespace TileEditor
             Color color = renderer.color;
             renderer.color = new Color(color.r, color.g, color.b, alpha);
 
-            int x = Mathf.RoundToInt(position.x - 0.5f);
-            int y = Mathf.RoundToInt(position.y - 0.5f);
-            World.navGrid.SetAt(x, y, tileData.moveCost);
+            PathTile pTile = go.AddComponent<PathTile>();
+            pTile.code = tileData.moveCost;
+            pTile.x = Mathf.RoundToInt(position.x - 0.4f);
+            pTile.y = Mathf.RoundToInt(position.y - 0.4f);
 
             return go;
         }

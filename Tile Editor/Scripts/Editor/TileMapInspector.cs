@@ -1022,6 +1022,7 @@ namespace TileEditor
                         if (tileSelectMode == TileSelectMode.Scene && colliderInfo != null) {
                             TileEditorUtility.ApplyColliderInfoToTile(tile, colliderInfo);
                         }
+
                         Undo.RecordObject(tileLayer, null);
                         tileLayer.Tiles[key] = tile;
                         Undo.RegisterCreatedObjectUndo(go, "Create Tile");

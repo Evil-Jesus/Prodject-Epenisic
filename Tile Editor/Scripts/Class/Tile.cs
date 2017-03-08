@@ -8,6 +8,7 @@ namespace TileEditor
         #region Public Fields
         [HideInInspector]
         public CollisionType Collision;
+        public int pathCost = 0;
         #endregion
     }
 }

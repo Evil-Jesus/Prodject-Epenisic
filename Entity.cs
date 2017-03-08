@@ -14,7 +14,7 @@ public class Entity : AStarAgent
     // Use this for initialization
     void Start()
     {
-        map = World.navGrid;
+        map = GameObject.Find("World").GetComponent<World>().navGrid;
         ownPosition = new Vec3di(5, 5, 0);
     }
 
