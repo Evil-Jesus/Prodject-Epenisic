@@ -8,7 +8,7 @@ public class World : MonoBehaviour
 {
 
     public Grid3di navGrid = new Grid3di(32, 32, 1);
-    public List<GameObject> gos = new List<GameObject>();
+    public PathTile[,] tiles = new PathTile[32, 32];
 
     // Use this for initialization
     void Start()
@@ -25,8 +25,8 @@ public class World : MonoBehaviour
     public void genNav()
     {
         PathTile[] paths = GetComponentsInChildren<PathTile>();
-        foreach(PathTile curPath in paths) {
-            gos.Add(curPath.gameObject);
+        foreach (PathTile curPath in paths) {
+            tiles[curPath.x, curPath.y] = curPath;
             if (curPath.code != 0) {
                 navGrid.SetAt(curPath.x, curPath.y, curPath.code);
 
