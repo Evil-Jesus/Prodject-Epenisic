@@ -14,6 +14,16 @@ public class dialogHolder : MonoBehaviour
             curD.text = temp;
         }
         print("Triggerd");
-        DialogBox.CDB.startDialog(dList);
+        DialogBox.CDB.startDialog(dList, this);
+        if (GetComponent<Entity>() != null) {
+            GetComponent<Entity>().Stop();
+        }
+    }
+
+    public void endDialog()
+    {
+        if (GetComponent<Entity>() != null) {
+            GetComponent<Entity>().refreshNav();
+        }
     }
 }

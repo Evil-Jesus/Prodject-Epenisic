@@ -22,8 +22,13 @@ public class Entity : AStarAgent
     {
         transform.position = new Vector3(ownPosition.x, ownPosition.y, 0);
         if (Input.GetKeyDown(KeyCode.Space)) {
-            FindPath(pathEnd, curPath, allowDiagonals);
-            Follow(curPath);
+            refreshNav();
         }
+    }
+
+    public void refreshNav()
+    {
+        FindPath(pathEnd, curPath, allowDiagonals);
+        Follow(curPath);
     }
 }

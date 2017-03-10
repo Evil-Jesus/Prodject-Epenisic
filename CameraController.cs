@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class PathTile : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
 
-    public int code;
-    public int x;
-    public int y;
+    public static Camera curCam = null;
+
+    public static void reset()
+    {
+        curCam.transform.position = Vector3.zero;
+    }
 
     // Use this for initialization
     void Start()
     {
-
+        curCam = GetComponent<Camera>();
     }
 
     // Update is called once per frame

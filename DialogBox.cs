@@ -77,6 +77,7 @@ public class DialogBox : MonoBehaviour
     public Image dialogPortrait = null;
     int dialogIndex = -1;
     public List<dialog> dialogList = new List<dialog>();
+    public dialogHolder dialogHolder;
 
     // Use this for initialization
     void Start()
@@ -132,15 +133,19 @@ public class DialogBox : MonoBehaviour
     {
         dialogIndex = -1;
         active = false;
+        PlayerController.allowMovement = true;
+        dialogHolder.endDialog();
     }
 
     public static DialogBox CDB = null;
-    public void startDialog(List<dialog> DialogList)
+    public void startDialog(List<dialog> DialogList, dialogHolder DialogHolder)
     {
         if (active)
             return;
+        dialogHolder = DialogHolder;
         active = true;
         dialogList = DialogList;
         dialogIndex = -1;
+        PlayerController.allowMovement = false;
     }
 }

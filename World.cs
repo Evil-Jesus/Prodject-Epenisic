@@ -8,7 +8,7 @@ public class World : MonoBehaviour
 {
 
     public Grid3di navGrid = new Grid3di(32, 32, 1);
-    public PathTile[,] tiles = new PathTile[32, 32];
+    public static PathTile[,] tiles = new PathTile[32, 32];
 
     // Use this for initialization
     void Start()

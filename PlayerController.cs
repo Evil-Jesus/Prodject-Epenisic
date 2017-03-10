@@ -5,37 +5,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public float speed = 10;
-
-    //move to this
-    public Tile target;
+    public static float speed;
+    public static bool allowMovement = true;
 
     void Update()
     {
-
-        if (Input.GetAxis("Horizontal") > 0) {
-            //move right
+        if (Input.GetKey(KeyCode.LeftShift)) {
+            speed = 5;
+        } else {
+            speed = 3;
         }
 
-        if (Input.GetAxis("Horizontal") < 0) {
-            //move left
+        if (allowMovement) {
+            float pushX = transform.position.x + Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime;
+            float pushY = transform.position.y + Input.GetAxisRaw("Vertical") * speed * Time.deltaTime;
+            transform.position = new Vector3(pushX, pushY, transform.position.z);
         }
-
-        if (Input.GetAxis("Vertical") > 0) {
-            //move up
-        }
-
-        if (Input.GetAxis("Vertical") < 0) {
-            //move down
-        }
-
-        float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, 0, 0), step);
-
-        /* Free move system
-        float newX = transform.position.x + (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
-        float newY = transform.position.y + (Input.GetAxis("Vertical") * speed * Time.deltaTime);
-        transform.position = new Vector3(newX, newY, transform.position.z);
-        */
     }
 }
