@@ -15,6 +15,7 @@ public class dialogHolder : MonoBehaviour
         }
         print("Triggerd");
         DialogBox.CDB.startDialog(dList, this);
+        CameraController.cc.setFocus(gameObject);
         if (GetComponent<Entity>() != null) {
             GetComponent<Entity>().Stop();
         }
@@ -25,5 +26,6 @@ public class dialogHolder : MonoBehaviour
         if (GetComponent<Entity>() != null) {
             GetComponent<Entity>().refreshNav();
         }
+        CameraController.cc.reset();
     }
 }
