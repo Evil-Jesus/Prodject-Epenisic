@@ -92,7 +92,7 @@ public class DialogBox : MonoBehaviour
     {
         dialogBackground.enabled = active;
         dialogText.enabled = active;
-        dialogPortrait.enabled = active;
+
         if (active) {
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) {
                 print("Pressed enter");

@@ -4,23 +4,35 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController cc = null;
 
-    public static Camera curCam = null;
+    public Camera curCam = null;
+    public float speed = 5;
+    public GameObject player = null;
+    public GameObject focus = null;
 
-    public static void reset()
+    public void Start()
     {
-        curCam.transform.position = Vector3.zero;
-    }
-
-    // Use this for initialization
-    void Start()
-    {
+        cc = this;
         curCam = GetComponent<Camera>();
+        player = GameObject.Find("Player");
+        focus = player;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        float step = speed * Time.deltaTime;
+        Vector3 prefix = new Vector3(0, 0, -10);
+        curCam.transform.position = Vector3.MoveTowards(curCam.transform.position, focus.transform.position + prefix, step);
+    }
 
+    public void reset()
+    {
+        focus = player;
+    }
+
+    public void setFocus(GameObject newFocus)
+    {
+        focus = newFocus;
     }
 }

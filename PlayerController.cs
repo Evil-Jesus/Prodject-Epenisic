@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public static float speed;
     public static bool allowMovement = true;
 
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.LeftShift)) {
             speed = 5;
